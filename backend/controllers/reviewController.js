@@ -88,33 +88,7 @@ const getAverageRating = async (req, res) => {
     });
   }
 };
-const user = await User.findById(freelancer);
 
-if (!user) {
-  return res.status(404).json({
-    message: "Freelancer not found",
-  });
-}
-
-// Prevent duplicate reviews
-const existingReview = await Review.findOne({
-  reviewer: req.user.id,
-  freelancer,
-});
-
-if (existingReview) {
-  return res.status(400).json({
-    message: "You have already reviewed this freelancer",
-  });
-}
-
-// Create review
-const review = await Review.create({
-  reviewer: req.user.id,
-  freelancer,
-  rating,
-  comment,
-});
 module.exports = {
   submitReview,
   getFreelancerReviews,
