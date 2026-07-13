@@ -8,6 +8,7 @@ const freelancerRoutes = require("./routes/freelancerRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const proposalRoutes = require("./routes/proposalRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 dotenv.config();
 
@@ -23,7 +24,7 @@ app.use("/api/freelancers", freelancerRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/proposals", proposalRoutes);
-
+app.use("/api/messages", messageRoutes);
 app.get("/", (req, res) => {
     res.send("SkillSphere Backend Running");
 });
