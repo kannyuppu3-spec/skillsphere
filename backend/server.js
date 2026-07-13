@@ -5,6 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const freelancerRoutes = require("./routes/freelancerRoutes");
+const projectRoutes = require("./routes/projectRoutes");
 dotenv.config();
 
 connectDB();
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api/auth",authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/freelancers", freelancerRoutes);
+app.use("/api/projects", projectRoutes);
 app.get("/", (req, res) => {
     res.send("SkillSphere Backend Running");
 });
