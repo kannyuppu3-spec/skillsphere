@@ -6,10 +6,10 @@ function Navbar() {
   const token = localStorage.getItem("token");
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    alert("Logged out successfully!");
-    navigate("/login");
-  };
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  navigate("/login");
+};
 
   return (
     <nav

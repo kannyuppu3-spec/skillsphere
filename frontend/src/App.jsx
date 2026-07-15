@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-
+import ClientDashboard from "./pages/ClientDashboard";
 import Navbar from "./components/Navbar";
 import ApplyJob from "./pages/ApplyJob";
 import Home from "./pages/Home";
@@ -8,6 +8,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MyProposals from "./pages/MyProposals";
+import Unauthorized from "./pages/Unauthorized";
+
 function App() {
   return (
     <>
@@ -18,31 +20,43 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
           <Route
   path="/dashboard"
   element={
-    <ProtectedRoute>
+    <ProtectedRoute role="freelancer">
       <Dashboard />
     </ProtectedRoute>
   }
 />
+
+<Route
+  path="/client-dashboard"
+  element={
+    <ProtectedRoute role="client">
+      <ClientDashboard />
+    </ProtectedRoute>
+  }
+/>
+
 <Route
   path="/apply/:id"
   element={
-    <ProtectedRoute>
+    <ProtectedRoute role="freelancer">
       <ApplyJob />
     </ProtectedRoute>
   }
 />
+
 <Route
   path="/my-proposals"
   element={
-    <ProtectedRoute>
+    <ProtectedRoute role="freelancer">
       <MyProposals />
     </ProtectedRoute>
   }
 />
+
         </Routes>
       </div>
     </>

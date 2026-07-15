@@ -27,7 +27,13 @@ function Login() {
       localStorage.setItem("user", JSON.stringify(res.data.user));
       alert("Login Successful!");
 
-      navigate("/dashboard");
+      if (res.data.user.role === "client") {
+  navigate("/client-dashboard");
+} else if (res.data.user.role === "freelancer") {
+  navigate("/dashboard");
+} else if (res.data.user.role === "admin") {
+  navigate("/admin-dashboard");
+}
     } catch (err) {
   console.log("Full Error:", err);
   console.log("Response:", err.response);
