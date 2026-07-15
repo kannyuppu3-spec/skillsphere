@@ -53,7 +53,12 @@ function Navbar() {
             >
               Dashboard
             </Link>
-
+<Link
+  to="/my-proposals"
+  style={{ color: "white", textDecoration: "none" }}
+>
+  My Proposals
+</Link>
             <button
               onClick={handleLogout}
               style={{

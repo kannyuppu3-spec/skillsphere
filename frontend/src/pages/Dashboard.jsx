@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-
+import { useNavigate } from "react-router-dom";
 function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [jobs, setJobs] = useState([]);
-
+const navigate = useNavigate();
   useEffect(() => {
     fetchJobs();
   }, []);
@@ -61,14 +61,15 @@ function Dashboard() {
       </p>
 
       <button
-        style={{
-          marginTop: "10px",
-          padding: "8px 16px",
-          cursor: "pointer",
-        }}
-      >
-        Apply
-      </button>
+  onClick={() => navigate(`/apply/${job._id}`)}
+  style={{
+    marginTop: "10px",
+    padding: "8px 16px",
+    cursor: "pointer",
+  }}
+>
+  Apply
+</button>
     </div>
   ))}
 </div>
