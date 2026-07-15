@@ -10,6 +10,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MyProposals from "./pages/MyProposals";
 import Unauthorized from "./pages/Unauthorized";
 import Chat from "./pages/Chat";
+import AddReview from "./pages/AddReview";
+import FreelancerReviews from "./pages/FreelancerReviews";
+
 function App() {
   return (
     <>
@@ -61,6 +64,22 @@ function App() {
   element={
     <ProtectedRoute>
       <Chat />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/add-review"
+  element={
+    <ProtectedRoute>
+      <AddReview />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/reviews"
+  element={
+    <ProtectedRoute>
+      <FreelancerReviews />
     </ProtectedRoute>
   }
 />
