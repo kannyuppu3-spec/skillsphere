@@ -59,6 +59,12 @@ function Navbar() {
 >
   My Proposals
 </Link>
+<Link
+  to="/chat"
+  style={{ color: "white", textDecoration: "none" }}
+>
+  Chat
+</Link>
             <button
               onClick={handleLogout}
               style={{

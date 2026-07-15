@@ -9,7 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MyProposals from "./pages/MyProposals";
 import Unauthorized from "./pages/Unauthorized";
-
+import Chat from "./pages/Chat";
 function App() {
   return (
     <>
@@ -56,7 +56,14 @@ function App() {
     </ProtectedRoute>
   }
 />
-
+<Route
+  path="/chat"
+  element={
+    <ProtectedRoute>
+      <Chat />
+    </ProtectedRoute>
+  }
+/>
         </Routes>
       </div>
     </>
