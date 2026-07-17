@@ -12,6 +12,7 @@ import Unauthorized from "./pages/Unauthorized";
 import Chat from "./pages/Chat";
 import AddReview from "./pages/AddReview";
 import FreelancerReviews from "./pages/FreelancerReviews";
+import Notifications from "./pages/Notifications";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route
   path="/dashboard"
   element={

@@ -24,7 +24,11 @@ const protect = (req, res, next) => {
       return next();
     } catch (error) {
       console.log("JWT Verify Error:", error.message);
+console.log("Received Token:", token);
 
+const decoded = jwt.decode(token);
+
+console.log("Decoded Without Verify:", decoded);
       return res.status(401).json({
         message: "Not Authorized"
       });
