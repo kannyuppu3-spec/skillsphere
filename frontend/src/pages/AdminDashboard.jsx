@@ -2,6 +2,25 @@
 import { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import api from "../services/api";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+} from "chart.js";
+
+import { Pie, Bar } from "react-chartjs-2";
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement
+);
 
 function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -18,11 +37,17 @@ function AdminDashboard() {
   const [roleFilter, setRoleFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("asc");
 
-  useEffect(() => {
+ useEffect(() => {
+  fetchStats();
+  fetchUsers();
+
+  const interval = setInterval(() => {
     fetchStats();
     fetchUsers();
-  }, []);
+  }, 30000); // Refresh every 30 seconds
 
+  return () => clearInterval(interval);
+}, []);
   // Dashboard Stats
   const fetchStats = async () => {
     try {
@@ -108,7 +133,81 @@ function AdminDashboard() {
     client: users.filter((u) => u.role === "client").length,
     freelancer: users.filter((u) => u.role === "freelancer").length,
   };
+// Pie Chart Data
+const pieData = {
+  labels: ["Admins", "Clients", "Freelancers"],
+  datasets: [
+    {
+      label: "Users",
+      data: [
+        roleStats.admin,
+        roleStats.client,
+        roleStats.freelancer,
+      ],
+      backgroundColor: [
+        "#ef4444",
+        "#3b82f6",
+        "#22c55e",
+      ],
+      borderWidth: 1,
+    },
+  ],
+};
 
+// Bar Chart Data
+const barData = {
+  labels: [
+    "Users",
+    "Jobs",
+    "Projects",
+    "Proposals",
+    "Reviews",
+  ],
+  datasets: [
+    {
+      label: "Platform Statistics",
+      data: [
+        stats.totalUsers,
+        stats.totalJobs,
+        stats.totalProjects,
+        stats.totalProposals,
+        stats.totalReviews,
+      ],
+      backgroundColor: [
+        "#3b82f6",
+        "#10b981",
+        "#f59e0b",
+        "#8b5cf6",
+        "#ef4444",
+      ],
+    },
+  ],
+};
+const pieOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "bottom",
+    },
+    title: {
+      display: true,
+      text: "User Role Distribution",
+    },
+  },
+};
+
+const barOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false,
+    },
+    title: {
+      display: true,
+      text: "Platform Statistics",
+    },
+  },
+};
   // CSV Export
   const csvData = users.map((user) => ({
     Name: user.name,
@@ -193,9 +292,57 @@ function AdminDashboard() {
           marginBottom: "20px",
         }}
       >
+        {/* Charts */}
+<h2 style={{ marginTop: "40px" }}>Analytics Overview</h2>
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
+    gap: "30px",
+    marginTop: "20px",
+    marginBottom: "40px",
+  }}
+>
+  <div
+    style={{
+      background: "#fff",
+      padding: "20px",
+      borderRadius: "10px",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+    }}
+  >
+    <h3>User Role Distribution</h3>
+
+    <Pie data={pieData} options={pieOptions} />
+  </div>
+
+  <div
+    style={{
+      background: "#fff",
+      padding: "20px",
+      borderRadius: "10px",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+    }}
+  >
+    <h3>Platform Statistics</h3>
+
+    <Bar data={barData} options={barOptions} />
+  </div>
+</div>
         <h2>All Registered Users</h2>
 
-        <CSVLink
+        
+      </div>
+
+      {/* Search / Filter / Sort */}
+      <div
+        style={{
+          display: "flex",
+          gap: "15px",
+          marginBottom: "20px",
+        }}
+      ><CSVLink
           data={csvData}
           filename="skillsphere-users.csv"
           style={{
@@ -209,16 +356,6 @@ function AdminDashboard() {
         >
           Export CSV
         </CSVLink>
-      </div>
-
-      {/* Search / Filter / Sort */}
-      <div
-        style={{
-          display: "flex",
-          gap: "15px",
-          marginBottom: "20px",
-        }}
-      >
         <input
           type="text"
           placeholder="Search by name or email..."
