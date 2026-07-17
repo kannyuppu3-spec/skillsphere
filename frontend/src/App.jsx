@@ -13,6 +13,7 @@ import Chat from "./pages/Chat";
 import AddReview from "./pages/AddReview";
 import FreelancerReviews from "./pages/FreelancerReviews";
 import Notifications from "./pages/Notifications";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -85,6 +86,15 @@ function App() {
     </ProtectedRoute>
   }
 />
+<Route
+  path="/admin-dashboard"
+  element={
+    <ProtectedRoute role="admin">
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
+/>
+
         </Routes>
       </div>
     </>

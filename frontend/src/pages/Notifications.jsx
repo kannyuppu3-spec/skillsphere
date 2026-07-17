@@ -8,14 +8,19 @@ function Notifications() {
     fetchNotifications();
   }, []);
 
-  const fetchNotifications = async () => {
-    try {
-      const res = await api.get("/notifications");
-      setNotifications(res.data.notifications);
-    } catch (err) {
-      console.log(err.response?.data || err.message);
-    }
-  };
+ const fetchNotifications = async () => {
+  try {
+    console.log("Fetching notifications...");
+
+    const res = await api.get("/notifications");
+
+    console.log("API Response:", res.data);
+
+    setNotifications(res.data.notifications);
+  } catch (err) {
+    console.log("Error:", err.response?.data || err.message);
+  }
+};
 
   return (
     <div style={{ padding: "30px" }}>

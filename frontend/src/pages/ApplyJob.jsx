@@ -1,73 +1,76 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import api from "../services/api";
 
-function ApplyJob() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-
-  const [form, setForm] = useState({
-    coverLetter: "",
-    bidAmount: "",
+function AdminDashboard() {
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalJobs: 0,
+    totalProjects: 0,
+    totalProposals: 0,
+    totalReviews: 0,
   });
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const fetchStats = async () => {
     try {
-      await api.post("/proposals/apply", {
-        jobId: id,
-        coverLetter: form.coverLetter,
-        bidAmount: Number(form.bidAmount),
-      });
-
-      alert("Proposal Submitted Successfully!");
-
-      navigate("/dashboard");
+      const res = await api.get("/admin/stats");
+      setStats(res.data);
     } catch (err) {
-      alert(err.response?.data?.message || "Submission Failed");
+      console.log(err.response?.data || err.message);
     }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Apply for Job</h2>
+    <div style={{ padding: "30px" }}>
+      <h2>Admin Dashboard</h2>
 
-      <form onSubmit={handleSubmit}>
-        <textarea
-          name="coverLetter"
-          placeholder="Write your cover letter..."
-          value={form.coverLetter}
-          onChange={handleChange}
-          rows="6"
-          cols="50"
-        />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: "20px",
+          marginTop: "20px",
+        }}
+      >
+        <div style={cardStyle}>
+          <h3>Total Users</h3>
+          <h1>{stats.totalUsers}</h1>
+        </div>
 
-        <br /><br />
+        <div style={cardStyle}>
+          <h3>Total Jobs</h3>
+          <h1>{stats.totalJobs}</h1>
+        </div>
 
-        <input
-          type="number"
-          name="bidAmount"
-          placeholder="Bid Amount"
-          value={form.bidAmount}
-          onChange={handleChange}
-        />
+        <div style={cardStyle}>
+          <h3>Total Projects</h3>
+          <h1>{stats.totalProjects}</h1>
+        </div>
 
-        <br /><br />
+        <div style={cardStyle}>
+          <h3>Total Proposals</h3>
+          <h1>{stats.totalProposals}</h1>
+        </div>
 
-        <button type="submit">
-          Submit Proposal
-        </button>
-      </form>
+        <div style={cardStyle}>
+          <h3>Total Reviews</h3>
+          <h1>{stats.totalReviews}</h1>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default ApplyJob;
+const cardStyle = {
+  background: "#fff",
+  border: "1px solid #ddd",
+  borderRadius: "10px",
+  padding: "20px",
+  textAlign: "center",
+  boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+};
+
+export default AdminDashboard;

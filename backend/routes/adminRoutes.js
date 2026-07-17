@@ -12,7 +12,7 @@ const { protect } = require("../middleware/authMiddleware");
 const { adminOnly } = require("../middleware/adminMiddleware");
 
 router.get("/users", protect, adminOnly, getAllUsers);
-router.get("/stats", protect, adminOnly, getDashboardStats);
+router.get("/dashboard", protect, adminOnly, getDashboardStats);
 router.delete("/users/:userId", protect, adminOnly, deleteUser);
 router.put("/users/:userId/role", protect, adminOnly, updateUserRole);
 

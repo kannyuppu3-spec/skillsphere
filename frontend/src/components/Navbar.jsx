@@ -8,6 +8,7 @@ function Navbar() {
   const [count, setCount] = useState(0);
 
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     if (token) {
@@ -89,26 +90,71 @@ function Navbar() {
           </>
         ) : (
           <>
-            <Link
-              to="/dashboard"
-              style={{
-                color: "white",
-                textDecoration: "none",
-              }}
-            >
-              Dashboard
-            </Link>
+            {/* Freelancer Dashboard */}
+            {user?.role === "freelancer" && (
+              <Link
+                to="/dashboard"
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                Dashboard
+              </Link>
+            )}
 
-            <Link
-              to="/my-proposals"
-              style={{
-                color: "white",
-                textDecoration: "none",
-              }}
-            >
-              My Proposals
-            </Link>
+            {/* Client Dashboard */}
+            {user?.role === "client" && (
+              <Link
+                to="/client-dashboard"
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                Dashboard
+              </Link>
+            )}
 
+            {/* Admin Dashboard */}
+            {user?.role === "admin" && (
+              <Link
+                to="/admin-dashboard"
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                Dashboard
+              </Link>
+            )}
+
+            {/* Freelancer Links */}
+            {user?.role === "freelancer" && (
+              <>
+                <Link
+                  to="/my-proposals"
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                  }}
+                >
+                  My Proposals
+                </Link>
+
+                <Link
+                  to="/reviews"
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                  }}
+                >
+                  Reviews
+                </Link>
+              </>
+            )}
+
+            {/* Chat for all logged-in users */}
             <Link
               to="/chat"
               style={{
@@ -119,7 +165,7 @@ function Navbar() {
               Chat
             </Link>
 
-            {/* Notification Bell */}
+            {/* Notifications */}
             <Link
               to="/notifications"
               style={{
