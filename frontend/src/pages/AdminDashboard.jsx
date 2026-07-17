@@ -13,6 +13,7 @@ function AdminDashboard() {
   });
 
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -34,14 +35,16 @@ function AdminDashboard() {
 
   // Fetch Users
   const fetchUsers = async () => {
-    try {
-      const res = await api.get("/admin/users");
-      setUsers(res.data.users);
-    } catch (err) {
-      console.log(err.response?.data || err.message);
-    }
-  };
+  try {
+    const res = await api.get("/admin/users");
 
+    setUsers(res.data.users);
+  } catch (err) {
+    console.log(err.response?.data || err.message);
+  } finally {
+    setLoading(false);
+  }
+};
   // Delete User
   const deleteUser = async (id) => {
     const confirmDelete = window.confirm(
@@ -247,62 +250,72 @@ function AdminDashboard() {
         </select>
       </div>
 
-      {/* Users Table */}
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-        }}
-      >
-        <thead>
-          <tr style={{ background: "#2563eb", color: "white" }}>
-            <th style={thStyle}>Name</th>
-            <th style={thStyle}>Email</th>
-            <th style={thStyle}>Role</th>
-            <th style={thStyle}>Actions</th>
-          </tr>
-        </thead>
+   {/* Users Table */}
+<h2 style={{ marginTop: "30px" }}>All Users</h2>
 
-        <tbody>
-          {filteredUsers.map((user) => (
-            <tr key={user._id}>
-              <td style={tdStyle}>{user.name}</td>
+{loading ? (
+  <p>Loading users...</p>
+) : (
+  <table
+    style={{
+      width: "100%",
+      borderCollapse: "collapse",
+      marginTop: "20px",
+    }}
+  >
+    <thead>
+      <tr style={{ background: "#2563eb", color: "white" }}>
+        <th style={thStyle}>Name</th>
+        <th style={thStyle}>Email</th>
+        <th style={thStyle}>Role</th>
+        <th style={thStyle}>Joined</th>
+        <th style={thStyle}>Actions</th>
+      </tr>
+    </thead>
 
-              <td style={tdStyle}>{user.email}</td>
+    <tbody>
+      {filteredUsers.map((user) => (
+        <tr key={user._id}>
+          <td style={tdStyle}>{user.name}</td>
 
-              <td style={tdStyle}>
-                <select
-                  value={user.role}
-                  onChange={(e) =>
-                    updateRole(user._id, e.target.value)
-                  }
-                >
-                  <option value="admin">Admin</option>
-                  <option value="client">Client</option>
-                  <option value="freelancer">Freelancer</option>
-                </select>
-              </td>
+          <td style={tdStyle}>{user.email}</td>
 
-              <td style={tdStyle}>
-                <button
-                  onClick={() => deleteUser(user._id)}
-                  style={{
-                    background: "red",
-                    color: "white",
-                    border: "none",
-                    padding: "8px 14px",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          <td style={tdStyle}>
+            <select
+              value={user.role}
+              onChange={(e) => updateRole(user._id, e.target.value)}
+            >
+              <option value="admin">Admin</option>
+              <option value="client">Client</option>
+              <option value="freelancer">Freelancer</option>
+            </select>
+          </td>
+
+          <td style={tdStyle}>
+            {new Date(user.createdAt).toLocaleDateString()}
+          </td>
+
+          <td style={tdStyle}>
+            <button
+              onClick={() => deleteUser(user._id)}
+              style={{
+                background: "red",
+                color: "white",
+                border: "none",
+                padding: "8px 14px",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+)}   
+ </div>
   );
 }
 
