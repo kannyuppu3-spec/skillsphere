@@ -11,20 +11,27 @@ function Navbar() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    if (token) {
+    if (!token) return;
+
+    fetchNotifications();
+
+    // Refresh every 10 seconds
+    const interval = setInterval(() => {
       fetchNotifications();
-    }
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, [token]);
 
   const fetchNotifications = async () => {
     try {
       const res = await api.get("/notifications");
 
-      const unread = res.data.notifications.filter(
+      const unreadCount = res.data.notifications.filter(
         (notification) => !notification.isRead
-      );
+      ).length;
 
-      setCount(unread.length);
+      setCount(unreadCount);
     } catch (err) {
       console.log(err.response?.data || err.message);
     }
@@ -44,7 +51,7 @@ function Navbar() {
         alignItems: "center",
         padding: "15px 30px",
         backgroundColor: "#2563eb",
-        color: "white",
+        color: "#fff",
       }}
     >
       <h2>SkillSphere</h2>
@@ -59,7 +66,7 @@ function Navbar() {
         <Link
           to="/"
           style={{
-            color: "white",
+            color: "#fff",
             textDecoration: "none",
           }}
         >
@@ -70,60 +77,43 @@ function Navbar() {
           <>
             <Link
               to="/login"
-              style={{
-                color: "white",
-                textDecoration: "none",
-              }}
+              style={{ color: "#fff", textDecoration: "none" }}
             >
               Login
             </Link>
 
             <Link
               to="/register"
-              style={{
-                color: "white",
-                textDecoration: "none",
-              }}
+              style={{ color: "#fff", textDecoration: "none" }}
             >
               Register
             </Link>
           </>
         ) : (
           <>
-            {/* Freelancer Dashboard */}
+            {/* Dashboard */}
             {user?.role === "freelancer" && (
               <Link
                 to="/dashboard"
-                style={{
-                  color: "white",
-                  textDecoration: "none",
-                }}
+                style={{ color: "#fff", textDecoration: "none" }}
               >
                 Dashboard
               </Link>
             )}
 
-            {/* Client Dashboard */}
             {user?.role === "client" && (
               <Link
                 to="/client-dashboard"
-                style={{
-                  color: "white",
-                  textDecoration: "none",
-                }}
+                style={{ color: "#fff", textDecoration: "none" }}
               >
                 Dashboard
               </Link>
             )}
 
-            {/* Admin Dashboard */}
             {user?.role === "admin" && (
               <Link
                 to="/admin-dashboard"
-                style={{
-                  color: "white",
-                  textDecoration: "none",
-                }}
+                style={{ color: "#fff", textDecoration: "none" }}
               >
                 Dashboard
               </Link>
@@ -134,33 +124,24 @@ function Navbar() {
               <>
                 <Link
                   to="/my-proposals"
-                  style={{
-                    color: "white",
-                    textDecoration: "none",
-                  }}
+                  style={{ color: "#fff", textDecoration: "none" }}
                 >
                   My Proposals
                 </Link>
 
                 <Link
                   to="/reviews"
-                  style={{
-                    color: "white",
-                    textDecoration: "none",
-                  }}
+                  style={{ color: "#fff", textDecoration: "none" }}
                 >
                   Reviews
                 </Link>
               </>
             )}
 
-            {/* Chat for all logged-in users */}
+            {/* Chat */}
             <Link
               to="/chat"
-              style={{
-                color: "white",
-                textDecoration: "none",
-              }}
+              style={{ color: "#fff", textDecoration: "none" }}
             >
               Chat
             </Link>
@@ -171,8 +152,8 @@ function Navbar() {
               style={{
                 position: "relative",
                 textDecoration: "none",
-                color: "white",
-                fontSize: "24px",
+                color: "#fff",
+                fontSize: "26px",
               }}
             >
               🔔
@@ -183,19 +164,20 @@ function Navbar() {
                     position: "absolute",
                     top: "-8px",
                     right: "-10px",
-                    background: "red",
-                    color: "white",
-                    borderRadius: "50%",
-                    width: "20px",
+                    background: "#ef4444",
+                    color: "#fff",
+                    borderRadius: "999px",
+                    minWidth: "20px",
                     height: "20px",
+                    padding: "0 5px",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    fontSize: "12px",
+                    fontSize: "11px",
                     fontWeight: "bold",
                   }}
                 >
-                  {count}
+                  {count > 99 ? "99+" : count}
                 </span>
               )}
             </Link>
@@ -203,12 +185,12 @@ function Navbar() {
             <button
               onClick={handleLogout}
               style={{
-                background: "red",
-                color: "white",
+                background: "#dc2626",
+                color: "#fff",
                 border: "none",
-                padding: "6px 12px",
+                padding: "8px 14px",
+                borderRadius: "6px",
                 cursor: "pointer",
-                borderRadius: "4px",
               }}
             >
               Logout

@@ -1,5 +1,7 @@
 const Proposal = require("../models/Proposal");
 const Job = require("../models/Job");
+const logActivity = require("../utils/activityLogger");
+const Notification = require("../models/Notification");
 
 // Apply to a Job
 const applyToJob = async (req, res) => {
@@ -34,7 +36,11 @@ const applyToJob = async (req, res) => {
       coverLetter,
       bidAmount,
     });
-
+await logActivity(
+  req.user.id,
+  "PROPOSAL_SUBMITTED",
+  `A proposal was submitted for job "${proposal.job}".`
+);
     res.status(201).json({
       message: "Proposal Submitted Successfully",
       proposal,
@@ -89,22 +95,51 @@ const updateProposalStatus = async (req, res) => {
 
     if (!proposal) {
       return res.status(404).json({
-        message: "Proposal not found"
+        message: "Proposal not found",
       });
     }
 
     proposal.status = req.body.status;
-
     await proposal.save();
+    await logActivity(
+  req.user.id,
+  req.body.status === "Accepted"
+    ? "PROPOSAL_ACCEPTED"
+    : "PROPOSAL_REJECTED",
+  `Proposal ${proposal._id} was ${req.body.status.toLowerCase()}.`
+);
+await Notification.create({
+  receiver: proposal.freelancer,
+  sender: req.user.id,
+  title: `Proposal ${req.body.status}`,
+  message:
+    req.body.status === "Accepted"
+      ? "Congratulations! Your proposal has been accepted."
+      : "Your proposal has been rejected.",
+});
+    // If accepted, reject all other proposals for the same job
+    if (req.body.status === "Accepted") {
+      await Proposal.updateMany(
+        {
+          job: proposal.job,
+          _id: { $ne: proposal._id },
+        },
+        {
+          $set: {
+            status: "Rejected",
+          },
+        }
+      );
+    }
 
     res.json({
       message: "Proposal Status Updated",
-      proposal
+      proposal,
     });
 
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };

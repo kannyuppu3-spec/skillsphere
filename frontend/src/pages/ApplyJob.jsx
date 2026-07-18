@@ -1,76 +1,84 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 
-function AdminDashboard() {
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    totalJobs: 0,
-    totalProjects: 0,
-    totalProposals: 0,
-    totalReviews: 0,
-  });
+function ApplyJob() {
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
+  const [coverLetter, setCoverLetter] = useState("");
+  const [bidAmount, setBidAmount] = useState("");
 
-  const fetchStats = async () => {
+  const submitProposal = async (e) => {
+    e.preventDefault();
+
     try {
-      const res = await api.get("/admin/stats");
-      setStats(res.data);
+      await api.post("/proposals/apply", {
+        jobId: id,
+        coverLetter,
+        bidAmount,
+      });
+
+      alert("Proposal submitted successfully!");
+
+      navigate("/my-proposals");
     } catch (err) {
       console.log(err.response?.data || err.message);
+      alert(err.response?.data?.message || "Failed to submit proposal");
     }
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Admin Dashboard</h2>
+    <div style={{ padding: "30px", maxWidth: "600px", margin: "0 auto" }}>
+      <h2>Apply for Job</h2>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "20px",
-          marginTop: "20px",
-        }}
-      >
-        <div style={cardStyle}>
-          <h3>Total Users</h3>
-          <h1>{stats.totalUsers}</h1>
+      <form onSubmit={submitProposal}>
+        <div style={{ marginBottom: "15px" }}>
+          <label>Bid Amount</label>
+          <input
+            type="number"
+            value={bidAmount}
+            onChange={(e) => setBidAmount(e.target.value)}
+            required
+            style={{
+              width: "100%",
+              padding: "10px",
+              marginTop: "5px",
+            }}
+          />
         </div>
 
-        <div style={cardStyle}>
-          <h3>Total Jobs</h3>
-          <h1>{stats.totalJobs}</h1>
+        <div style={{ marginBottom: "15px" }}>
+          <label>Cover Letter</label>
+          <textarea
+            rows="6"
+            value={coverLetter}
+            onChange={(e) => setCoverLetter(e.target.value)}
+            required
+            style={{
+              width: "100%",
+              padding: "10px",
+              marginTop: "5px",
+            }}
+          />
         </div>
 
-        <div style={cardStyle}>
-          <h3>Total Projects</h3>
-          <h1>{stats.totalProjects}</h1>
-        </div>
-
-        <div style={cardStyle}>
-          <h3>Total Proposals</h3>
-          <h1>{stats.totalProposals}</h1>
-        </div>
-
-        <div style={cardStyle}>
-          <h3>Total Reviews</h3>
-          <h1>{stats.totalReviews}</h1>
-        </div>
-      </div>
+        <button
+          type="submit"
+          style={{
+            background: "#2563eb",
+            color: "#fff",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        >
+          Submit Proposal
+        </button>
+      </form>
     </div>
   );
 }
 
-const cardStyle = {
-  background: "#fff",
-  border: "1px solid #ddd",
-  borderRadius: "10px",
-  padding: "20px",
-  textAlign: "center",
-  boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-};
-
-export default AdminDashboard;
+export default ApplyJob;

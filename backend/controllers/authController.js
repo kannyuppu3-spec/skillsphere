@@ -2,7 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const registerUser = async (req,res) => {
-
+const logActivity = require("../utils/activityLogger");
     try{
 
         const {name,email,password,role} = req.body;
@@ -24,7 +24,11 @@ const registerUser = async (req,res) => {
             password:hashedPassword,
             role
         });
-
+await logActivity(
+  user._id,
+  "USER_REGISTERED",
+  `${user.name} registered as ${user.role}.`
+);
         res.status(201).json({
             message:"User Registered",
             user

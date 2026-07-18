@@ -14,6 +14,8 @@ import AddReview from "./pages/AddReview";
 import FreelancerReviews from "./pages/FreelancerReviews";
 import Notifications from "./pages/Notifications";
 import AdminDashboard from "./pages/AdminDashboard";
+import JobProposals from "./pages/JobProposals";
+import ActivityLogs from "./pages/ActivityLogs";
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/activity-logs" element={<ActivityLogs />} />
           <Route
   path="/dashboard"
   element={
@@ -94,7 +97,14 @@ function App() {
     </ProtectedRoute>
   }
 />
-
+<Route
+  path="/job/:jobId/proposals"
+  element={
+    <ProtectedRoute role="client">
+      <JobProposals />
+    </ProtectedRoute>
+  }
+/>
         </Routes>
       </div>
     </>

@@ -1,5 +1,5 @@
 const Job = require("../models/Job");
-
+const logActivity = require("../utils/activityLogger");
 // Create Job
 const createJob = async (req, res) => {
   try {
@@ -11,6 +11,11 @@ const createJob = async (req, res) => {
       skills: req.body.skills,
       status: req.body.status || "Open",
     });
+await logActivity(
+  req.user.id,
+  "JOB_CREATED",
+  `${req.user.id} created a new job: ${job.title}`
+);
 
     res.status(201).json({
       message: "Job Created Successfully",
@@ -118,10 +123,28 @@ const deleteJob = async (req, res) => {
     });
   }
 };
+// Get Logged-in Client Jobs
+const getMyJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({
+      user: req.user.id,
+    });
+
+    res.json({
+      count: jobs.length,
+      jobs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   createJob,
   getAllJobs,
   getJobById,
+  getMyJobs,
   updateJob,
   deleteJob,
 };

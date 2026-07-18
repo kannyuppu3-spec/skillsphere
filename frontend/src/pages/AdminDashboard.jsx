@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import api from "../services/api";
+import { Link } from "react-router-dom";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -51,7 +52,7 @@ function AdminDashboard() {
   // Dashboard Stats
   const fetchStats = async () => {
     try {
-      const res = await api.get("/admin/stats");
+      const res = await api.get("/admin/dashboard");
       setStats(res.data);
     } catch (err) {
       console.log(err.response?.data || err.message);
@@ -217,6 +218,7 @@ const barOptions = {
   }));
 
   return (
+    
     <div style={{ padding: "30px" }}>
       <h1>Admin Dashboard</h1>
 
@@ -228,7 +230,21 @@ const barOptions = {
           gap: "20px",
           marginBottom: "40px",
         }}
-      >
+      ><Link to="/activity-logs">
+  <button
+    style={{
+      background: "#2563eb",
+      color: "#fff",
+      border: "none",
+      padding: "10px 20px",
+      borderRadius: "6px",
+      cursor: "pointer",
+      marginBottom: "20px",
+    }}
+  >
+    View Activity Logs
+  </button>
+</Link>
         <div style={cardStyle}>
           <h3>Total Users</h3>
           <h1>{stats.totalUsers}</h1>
