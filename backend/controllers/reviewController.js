@@ -54,6 +54,27 @@ const getFreelancerReviews = async (req, res) => {
     });
   }
 };
+const getMyReviews = async (req, res) => {
+  try {
+    console.log("Logged In User:", req.user);
+
+    const reviews = await Review.find({
+      freelancer: req.user.id,
+    });
+
+    console.log("Reviews:", reviews);
+
+    res.json({
+      count: reviews.length,
+      reviews,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 // Get Average Rating
 const getAverageRating = async (req, res) => {
   try {
@@ -93,4 +114,5 @@ module.exports = {
   submitReview,
   getFreelancerReviews,
   getAverageRating,
+  getMyReviews,
 };
