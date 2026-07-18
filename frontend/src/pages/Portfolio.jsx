@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-
+import { toast } from "react-toastify";
 function Portfolio() {
   const [projects, setProjects] = useState([]);
 
@@ -46,7 +46,7 @@ function Portfolio() {
           .filter(Boolean),
       });
 
-      alert("Project Added Successfully");
+      toast.success("Project Saved Successfully!");
 
       setFormData({
         title: "",
@@ -61,7 +61,7 @@ function Portfolio() {
       fetchProjects();
     } catch (err) {
       console.log(err.response?.data || err.message);
-      alert("Failed to add project");
+      toast.success("Project Deleted Successfully!");
     }
   };
 

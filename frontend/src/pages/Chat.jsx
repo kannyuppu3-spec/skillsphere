@@ -51,7 +51,7 @@ function Chat() {
       fetchMessages(selectedUser.id);
     } catch (err) {
       console.log(err.response?.data || err.message);
-      alert(err.response?.data?.message || "Failed to send message");
+      toast.error("Failed to send messages.");
     }
   };
 

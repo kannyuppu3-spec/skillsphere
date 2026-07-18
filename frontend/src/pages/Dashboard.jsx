@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,12 +29,16 @@ function Dashboard() {
   reviews: 0,
   notifications: 0,
 });
+const [currentPage, setCurrentPage] = useState(1);
+
+const jobsPerPage = 5;
   const [search, setSearch] = useState("");
 const [skill, setSkill] = useState("");
 const [sort, setSort] = useState("latest");
   const user = JSON.parse(localStorage.getItem("user"));
   const [jobs, setJobs] = useState([]);
   const [recentActivities, setRecentActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
 const navigate = useNavigate();
   useEffect(() => {
     fetchJobs();
@@ -51,6 +56,7 @@ const fetchRecentActivities = async () => {
     console.log(err.response?.data || err.message);
   }
 };
+
   const fetchJobs = async () => {
     try {
       const res = await api.get("/jobs");
@@ -61,6 +67,8 @@ const fetchRecentActivities = async () => {
   };
 const fetchStats = async () => {
   try {
+    setLoading(true);
+
     const [jobs, proposals, reviews, notifications] =
       await Promise.all([
         api.get("/jobs"),
@@ -80,6 +88,8 @@ const fetchStats = async () => {
     });
   } catch (err) {
     console.log(err);
+  } finally {
+    setLoading(false);
   }
 };
 const barData = {
@@ -122,7 +132,37 @@ const doughnutData = {
     },
   ],
 };
+if (loading) {
+  return <Loading />;
+}
+const filteredJobs = [...jobs]
+  .filter((job) =>
+    job.title.toLowerCase().includes(search.toLowerCase())
+  )
+  .filter((job) =>
+    skill === ""
+      ? true
+      : (job.skills || [])
+          .join(" ")
+          .toLowerCase()
+          .includes(skill.toLowerCase())
+  )
+  .sort((a, b) => {
+    if (sort === "budgetHigh") return b.budget - a.budget;
+    if (sort === "budgetLow") return a.budget - b.budget;
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+  const indexOfLastJob = currentPage * jobsPerPage;
+const indexOfFirstJob = indexOfLastJob - jobsPerPage;
 
+const currentJobs = filteredJobs.slice(
+  indexOfFirstJob,
+  indexOfLastJob
+);
+
+const totalPages = Math.ceil(
+  filteredJobs.length / jobsPerPage
+);
   return (
     <div style={{ padding: "20px" }}>
       <div
@@ -297,6 +337,53 @@ const doughnutData = {
     ))
   )}
 </div>
+<div
+  style={{
+    display: "flex",
+    gap: "15px",
+    flexWrap: "wrap",
+    margin: "25px 0",
+  }}
+>
+  <input
+    type="text"
+    placeholder="Search Job..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    style={{
+      padding: "10px",
+      width: "250px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  />
+
+  <input
+    type="text"
+    placeholder="Filter by Skill"
+    value={skill}
+    onChange={(e) => setSkill(e.target.value)}
+    style={{
+      padding: "10px",
+      width: "220px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  />
+
+  <select
+    value={sort}
+    onChange={(e) => setSort(e.target.value)}
+    style={{
+      padding: "10px",
+      borderRadius: "8px",
+    }}
+  >
+    <option value="latest">Latest</option>
+    <option value="budgetHigh">Budget High → Low</option>
+    <option value="budgetLow">Budget Low → High</option>
+  </select>
+</div>
       <h2>Available Jobs</h2>
 <div
   style={{
@@ -306,7 +393,7 @@ const doughnutData = {
     marginTop: "20px",
   }}
 >
-  {jobs.map((job) => (
+  {currentJobs.map((job) => (
     <div
       key={job._id}
       style={{
@@ -341,7 +428,46 @@ const doughnutData = {
     </div>
   ))}
 </div>
-      {jobs.length === 0 ? (
+<div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "30px",
+    gap: "10px",
+  }}
+>
+  <button
+    disabled={currentPage === 1}
+    onClick={() => setCurrentPage(currentPage - 1)}
+    style={{
+      padding: "10px 18px",
+      cursor: "pointer",
+    }}
+  >
+    ◀ Previous
+  </button>
+
+  <span
+    style={{
+      padding: "10px",
+      fontWeight: "bold",
+    }}
+  >
+    Page {currentPage} of {totalPages || 1}
+  </span>
+
+  <button
+    disabled={currentPage === totalPages || totalPages === 0}
+    onClick={() => setCurrentPage(currentPage + 1)}
+    style={{
+      padding: "10px 18px",
+      cursor: "pointer",
+    }}
+  >
+    Next ▶
+  </button>
+</div>
+      {filteredJobs.length === 0 ? (
         <p>No jobs found.</p>
       ) : (
         jobs.map((job) => (

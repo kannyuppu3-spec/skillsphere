@@ -57,14 +57,14 @@ function Profile() {
           .filter(Boolean),
       });
 
-      alert("Profile updated successfully!");
+      toast.success("Profile Updated Successfully!");
 
       setEditing(false);
 
       fetchProfile();
     } catch (err) {
       console.log(err.response?.data || err.message);
-      alert(err.response?.data?.message || err.message);
+      toast.error("Unable to update profile.");
     }
   };
 const fields = [

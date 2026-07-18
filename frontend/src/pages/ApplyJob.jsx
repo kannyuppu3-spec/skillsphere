@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
-
+import { toast } from "react-toastify";
 function ApplyJob() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,12 +19,11 @@ function ApplyJob() {
         bidAmount,
       });
 
-      alert("Proposal submitted successfully!");
-
+      toast.success("Application Submitted Successfully!");
       navigate("/my-proposals");
     } catch (err) {
       console.log(err.response?.data || err.message);
-      alert(err.response?.data?.message || "Failed to submit proposal");
+      toast.error("Failed to submit application.");
     }
   };
 
