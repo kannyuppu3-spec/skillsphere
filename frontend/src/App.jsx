@@ -16,6 +16,7 @@ import Notifications from "./pages/Notifications";
 import AdminDashboard from "./pages/AdminDashboard";
 import JobProposals from "./pages/JobProposals";
 import ActivityLogs from "./pages/ActivityLogs";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -102,6 +103,14 @@ function App() {
   element={
     <ProtectedRoute role="client">
       <JobProposals />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/profile"
+  element={
+    <ProtectedRoute>
+      <Profile />
     </ProtectedRoute>
   }
 />

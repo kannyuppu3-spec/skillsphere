@@ -181,7 +181,15 @@ function Navbar() {
                 </span>
               )}
             </Link>
-
+<Link
+  to="/profile"
+  style={{
+    color: "white",
+    textDecoration: "none",
+  }}
+>
+  Profile
+</Link>
             <button
               onClick={handleLogout}
               style={{
