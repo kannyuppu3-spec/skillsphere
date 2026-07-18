@@ -28,14 +28,59 @@ await logActivity(
   }
 };
 // Get All Jobs
+// Get All Jobs with Search, Filter, Sort & Pagination
 const getAllJobs = async (req, res) => {
   try {
-    const jobs = await Job.find().populate("user", "name email");
+    const search = req.query.search || "";
+    const skill = req.query.skill || "";
+    const page = Number(req.query.page) || 1;
+    const limit = 6;
+    const skip = (page - 1) * limit;
+    const sort = req.query.sort || "";
+
+    let query = {};
+
+    // Search by title
+    if (search) {
+      query.title = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    // Filter by skill
+    if (skill) {
+      query.skills = {
+        $regex: skill,
+        $options: "i",
+      };
+    }
+
+    let sortOption = {};
+
+    if (sort === "budget") {
+      sortOption.budget = -1;
+    }
+
+    if (sort === "latest") {
+      sortOption.createdAt = -1;
+    }
+
+    const totalJobs = await Job.countDocuments(query);
+
+    const jobs = await Job.find(query)
+      .populate("user", "name email")
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limit);
 
     res.json({
-      count: jobs.length,
+      currentPage: page,
+      totalPages: Math.ceil(totalJobs / limit),
+      totalJobs,
       jobs,
     });
+
   } catch (error) {
     res.status(500).json({
       message: error.message,

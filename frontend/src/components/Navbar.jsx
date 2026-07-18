@@ -8,30 +8,23 @@ function Navbar() {
   const [count, setCount] = useState(0);
 
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
   useEffect(() => {
-    if (!token) return;
-
-    fetchNotifications();
-
-    // Refresh every 10 seconds
-    const interval = setInterval(() => {
+    if (token) {
       fetchNotifications();
-    }, 10000);
-
-    return () => clearInterval(interval);
+    }
   }, [token]);
 
   const fetchNotifications = async () => {
     try {
       const res = await api.get("/notifications");
 
-      const unreadCount = res.data.notifications.filter(
+      const unread = res.data.notifications.filter(
         (notification) => !notification.isRead
-      ).length;
+      );
 
-      setCount(unreadCount);
+      setCount(unread.length);
     } catch (err) {
       console.log(err.response?.data || err.message);
     }
@@ -49,26 +42,26 @@ function Navbar() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        background: "#2563eb",
         padding: "15px 30px",
-        backgroundColor: "#2563eb",
         color: "#fff",
+        flexWrap: "wrap",
       }}
     >
-      <h2>SkillSphere</h2>
+      <h2 style={{ margin: 0 }}>SkillSphere</h2>
 
       <div
         style={{
           display: "flex",
-          gap: "20px",
+          gap: "18px",
           alignItems: "center",
+          flexWrap: "wrap",
         }}
       >
+        {/* Home */}
         <Link
           to="/"
-          style={{
-            color: "#fff",
-            textDecoration: "none",
-          }}
+          style={{ color: "#fff", textDecoration: "none" }}
         >
           Home
         </Link>
@@ -91,68 +84,90 @@ function Navbar() {
           </>
         ) : (
           <>
-            {/* Dashboard */}
+            {/* Freelancer */}
             {user?.role === "freelancer" && (
-              <Link
-                to="/dashboard"
-                style={{ color: "#fff", textDecoration: "none" }}
-              >
-                Dashboard
-              </Link>
+              <>
+                <Link
+                  to="/dashboard"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  Dashboard
+                </Link>
+
+                <Link
+                  to="/profile"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  Profile
+                </Link>
+
+                <Link
+                  to="/portfolio"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  Portfolio
+                </Link>
+
+                <Link
+                  to="/resume"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  Resume
+                </Link>
+
+                <Link
+                  to="/my-proposals"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  My Proposals
+                </Link>
+
+                <Link
+                  to="/reviews"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  Reviews
+                </Link>
+              </>
             )}
 
+            {/* Client */}
             {user?.role === "client" && (
-              <Link
-                to="/client-dashboard"
-                style={{ color: "#fff", textDecoration: "none" }}
-              >
-                Dashboard
-              </Link>
+              <>
+                <Link
+                  to="/client-dashboard"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  Dashboard
+                </Link>
+
+                <Link
+                  to="/profile"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  Profile
+                </Link>
+              </>
             )}
 
+            {/* Admin */}
             {user?.role === "admin" && (
-              <Link
-                to="/admin-dashboard"
-                style={{ color: "#fff", textDecoration: "none" }}
-              >
-                Dashboard
-              </Link>
+              <>
+                <Link
+                  to="/admin-dashboard"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  Dashboard
+                </Link>
+
+                <Link
+                  to="/activity-logs"
+                  style={{ color: "#fff", textDecoration: "none" }}
+                >
+                  Activity Logs
+                </Link>
+              </>
             )}
-
-            {/* Freelancer Links */}
-            {user?.role === "freelancer" && (
-  <>
-    <Link
-      to="/portfolio"
-      style={{
-        color: "white",
-        textDecoration: "none",
-      }}
-    >
-      Portfolio
-    </Link>
-
-    <Link
-      to="/my-proposals"
-      style={{
-        color: "white",
-        textDecoration: "none",
-      }}
-    >
-      My Proposals
-    </Link>
-
-    <Link
-      to="/reviews"
-      style={{
-        color: "white",
-        textDecoration: "none",
-      }}
-    >
-      Reviews
-    </Link>
-  </>
-)}
 
             {/* Chat */}
             <Link
@@ -167,9 +182,9 @@ function Navbar() {
               to="/notifications"
               style={{
                 position: "relative",
-                textDecoration: "none",
                 color: "#fff",
-                fontSize: "26px",
+                textDecoration: "none",
+                fontSize: "22px",
               }}
             >
               🔔
@@ -180,39 +195,31 @@ function Navbar() {
                     position: "absolute",
                     top: "-8px",
                     right: "-10px",
-                    background: "#ef4444",
-                    color: "#fff",
-                    borderRadius: "999px",
-                    minWidth: "20px",
+                    width: "20px",
                     height: "20px",
-                    padding: "0 5px",
+                    borderRadius: "50%",
+                    background: "red",
+                    color: "#fff",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    fontSize: "11px",
+                    fontSize: "12px",
                     fontWeight: "bold",
                   }}
                 >
-                  {count > 99 ? "99+" : count}
+                  {count}
                 </span>
               )}
             </Link>
-<Link
-  to="/profile"
-  style={{
-    color: "white",
-    textDecoration: "none",
-  }}
->
-  Profile
-</Link>
+
+            {/* Logout */}
             <button
               onClick={handleLogout}
               style={{
                 background: "#dc2626",
                 color: "#fff",
                 border: "none",
-                padding: "8px 14px",
+                padding: "8px 16px",
                 borderRadius: "6px",
                 cursor: "pointer",
               }}

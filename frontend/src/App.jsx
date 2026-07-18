@@ -18,7 +18,7 @@ import JobProposals from "./pages/JobProposals";
 import ActivityLogs from "./pages/ActivityLogs";
 import Profile from "./pages/Profile";
 import Portfolio from "./pages/Portfolio";
-
+import Resume from "./pages/Resume";
 function App() {
   return (
     <>
@@ -31,7 +31,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="/notifications" element={<Notifications />} />
-          <Route path="/activity-logs" element={<ActivityLogs />} />
+          <Route path="/activity-logs" element={<ProtectedRoute role="admin"><ActivityLogs /></ProtectedRoute>} />
+          
           <Route
   path="/dashboard"
   element={
@@ -120,6 +121,14 @@ function App() {
   element={
     <ProtectedRoute role="freelancer">
       <Portfolio />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/resume"
+  element={
+    <ProtectedRoute role="freelancer">
+      <Resume />
     </ProtectedRoute>
   }
 />

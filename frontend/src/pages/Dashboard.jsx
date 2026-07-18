@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 function Dashboard() {
+  const [search, setSearch] = useState("");
+const [skill, setSkill] = useState("");
+const [sort, setSort] = useState("latest");
   const user = JSON.parse(localStorage.getItem("user"));
   const [jobs, setJobs] = useState([]);
 const navigate = useNavigate();
