@@ -17,6 +17,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import JobProposals from "./pages/JobProposals";
 import ActivityLogs from "./pages/ActivityLogs";
 import Profile from "./pages/Profile";
+import Portfolio from "./pages/Portfolio";
 
 function App() {
   return (
@@ -111,6 +112,14 @@ function App() {
   element={
     <ProtectedRoute>
       <Profile />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/portfolio"
+  element={
+    <ProtectedRoute role="freelancer">
+      <Portfolio />
     </ProtectedRoute>
   }
 />

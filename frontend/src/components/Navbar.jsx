@@ -121,22 +121,38 @@ function Navbar() {
 
             {/* Freelancer Links */}
             {user?.role === "freelancer" && (
-              <>
-                <Link
-                  to="/my-proposals"
-                  style={{ color: "#fff", textDecoration: "none" }}
-                >
-                  My Proposals
-                </Link>
+  <>
+    <Link
+      to="/portfolio"
+      style={{
+        color: "white",
+        textDecoration: "none",
+      }}
+    >
+      Portfolio
+    </Link>
 
-                <Link
-                  to="/reviews"
-                  style={{ color: "#fff", textDecoration: "none" }}
-                >
-                  Reviews
-                </Link>
-              </>
-            )}
+    <Link
+      to="/my-proposals"
+      style={{
+        color: "white",
+        textDecoration: "none",
+      }}
+    >
+      My Proposals
+    </Link>
+
+    <Link
+      to="/reviews"
+      style={{
+        color: "white",
+        textDecoration: "none",
+      }}
+    >
+      Reviews
+    </Link>
+  </>
+)}
 
             {/* Chat */}
             <Link
