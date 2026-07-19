@@ -21,6 +21,8 @@ import Portfolio from "./pages/Portfolio";
 import Resume from "./pages/Resume";
 import { ToastContainer } from "react-toastify";
 import AdminUsers from "./pages/AdminUsers";
+import Footer from "./components/Footer";
+import NotFound from "./pages/NotFound";
 import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/activity-logs" element={<ProtectedRoute role="admin"><ActivityLogs /></ProtectedRoute>} />
           <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="*" element={<NotFound />} />
+
           <Route
   path="/dashboard"
   element={
@@ -149,5 +153,5 @@ function App() {
     </>
   );
 }
-
+<Footer />
 export default App;
