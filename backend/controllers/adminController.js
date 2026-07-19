@@ -24,6 +24,13 @@ const getAllUsers = async (req, res) => {
 const getDashboardStats = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
+    const freelancers = await User.countDocuments({
+      role: "freelancer",
+    });
+    const clients = await User.countDocuments({
+      role: "client",
+    });
+
     const totalJobs = await Job.countDocuments();
     const totalProjects = await Project.countDocuments();
     const totalProposals = await Proposal.countDocuments();
@@ -31,12 +38,13 @@ const getDashboardStats = async (req, res) => {
 
     res.json({
       totalUsers,
+      freelancers,
+      clients,
       totalJobs,
       totalProjects,
       totalProposals,
       totalReviews,
     });
-
   } catch (error) {
     res.status(500).json({
       message: error.message,

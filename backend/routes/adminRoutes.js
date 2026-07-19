@@ -1,19 +1,27 @@
 const express = require("express");
-
 const router = express.Router();
 
 const {
   getAllUsers,
   getDashboardStats,
   deleteUser,
-  updateUserRole
+  updateUserRole,
 } = require("../controllers/adminController");
-const { protect } = require("../middleware/authMiddleware");
-const { adminOnly } = require("../middleware/adminMiddleware");
 
-router.get("/users", protect, adminOnly, getAllUsers);
-router.get("/dashboard", protect, adminOnly, getDashboardStats);
-router.delete("/users/:userId", protect, adminOnly, deleteUser);
-router.put("/users/:userId/role", protect, adminOnly, updateUserRole);
+const { protect } = require("../middleware/authMiddleware");
+router.get("/test", (req, res) => {
+  res.json({
+    message: "Admin Routes Working",
+  });
+});
+router.get("/users", protect, getAllUsers);
+router.get("/stats", (req, res) => {
+  res.json({
+    message: "Stats Route Working",
+  });
+});
+
+router.delete("/users/:userId", protect, deleteUser);
+router.put("/users/:userId/role", protect, updateUserRole);
 
 module.exports = router;

@@ -12,7 +12,16 @@ import {
   LinearScale,
   BarElement,
 } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
 
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend
+);
 import { Pie, Bar } from "react-chartjs-2";
 ChartJS.register(
   ArcElement,
@@ -51,13 +60,13 @@ function AdminDashboard() {
 }, []);
   // Dashboard Stats
   const fetchStats = async () => {
-    try {
-      const res = await api.get("/admin/dashboard");
-      setStats(res.data);
-    } catch (err) {
-      console.log(err.response?.data || err.message);
-    }
-  };
+  try {
+    const res = await api.get("/admin/stats");
+    setStats(res.data);
+  } catch (err) {
+    console.log(err.response?.data || err.message);
+  }
+};
 
   // Fetch Users
   const fetchUsers = async () => {
@@ -180,6 +189,25 @@ const barData = {
         "#f59e0b",
         "#8b5cf6",
         "#ef4444",
+      ],
+    },
+  ],
+};
+const doughnutData = {
+  labels: ["Users", "Jobs", "Proposals", "Reviews"],
+  datasets: [
+    {
+      data: [
+        stats.totalUsers,
+        stats.totalJobs,
+        stats.totalProposals,
+        stats.totalReviews,
+      ],
+      backgroundColor: [
+        "#2563eb",
+        "#16a34a",
+        "#f59e0b",
+        "#dc2626",
       ],
     },
   ],

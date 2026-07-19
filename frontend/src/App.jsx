@@ -20,7 +20,7 @@ import Profile from "./pages/Profile";
 import Portfolio from "./pages/Portfolio";
 import Resume from "./pages/Resume";
 import { ToastContainer } from "react-toastify";
-
+import AdminUsers from "./pages/AdminUsers";
 import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
@@ -35,7 +35,7 @@ function App() {
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/activity-logs" element={<ProtectedRoute role="admin"><ActivityLogs /></ProtectedRoute>} />
-          
+          <Route path="/admin/users" element={<AdminUsers />} />
           <Route
   path="/dashboard"
   element={
