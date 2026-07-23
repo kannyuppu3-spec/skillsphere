@@ -3,22 +3,16 @@ const mongoose = require("mongoose");
 const connectDB = async () => {
   try {
     console.log("Connecting to MongoDB...");
+    console.log("URI:", process.env.MONGO_URI);
 
     await mongoose.connect(process.env.MONGO_URI);
 
-    console.log("MongoDB Connected Successfully");
+    console.log("✅ MongoDB Connected");
     console.log("Database:", mongoose.connection.name);
-    console.log("Host:", mongoose.connection.host);
-
-    const users = await mongoose.connection.db
-      .collection("users")
-      .find({})
-      .toArray();
-
-    console.log("Users in DB:", users);
-
   } catch (err) {
+    console.error("MongoDB Error:");
     console.error(err);
+    console.error(err.stack);
     process.exit(1);
   }
 };

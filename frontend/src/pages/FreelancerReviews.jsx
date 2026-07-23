@@ -9,7 +9,7 @@ function FreelancerReviews() {
   });
 
   // Replace with your freelancer MongoDB ID
-  const freelancerId = "6a3d47edf744c9da1fda4ceb";
+  const freelancerId = "6a61aa85c260a58634ee7638";
 
   useEffect(() => {
     fetchReviews();
