@@ -13,7 +13,7 @@ const sendMessage = async (req, res) => {
 
     const user = await User.findById(receiver);
 
-    console.log("User Found:", user);
+    console.log("Found User:", user);
 
     if (!user) {
       return res.status(404).json({
@@ -27,10 +27,7 @@ const sendMessage = async (req, res) => {
       message,
     });
 
-    res.status(201).json({
-      message: "Message Sent Successfully",
-      newMessage,
-    });
+    res.status(201).json(newMessage);
 
   } catch (err) {
     console.log(err);
