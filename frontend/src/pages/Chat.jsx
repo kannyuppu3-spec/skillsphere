@@ -8,9 +8,10 @@ function Chat() {
   const [newMessage, setNewMessage] = useState("");
 
   // Replace this with your CLIENT MongoDB _id
-  const res = await api.get("/users");
-
-setUsers(res.data);
+  const client = {
+  id: "6a61aa85c260a58634ee7638",
+  name: "hello",
+};
 
   const fetchMessages = async (userId) => {
     try {
@@ -34,12 +35,13 @@ setUsers(res.data);
   }, [selectedUser]);
 
   const openClientChat = () => {
-    setSelectedUser(client);
-  };
+  console.log(client);
+  setSelectedUser(client);
+};
 
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
-
+console.log("Selected User:", selectedUser);
     try {
       await api.post("/messages/send", {
         receiver: selectedUser.id,

@@ -6,20 +6,20 @@ const sendMessage = async (req, res) => {
   try {
     const { receiver, message } = req.body;
 
-console.log("Receiver ID:", receiver);
+    console.log("Receiver from request:", receiver);
+    console.log("Type:", typeof receiver);
 
-const users = await User.find();
+    const user = await User.findById(receiver);
 
-console.log("All Users:", users);
+    console.log("Found user:", user);
 
-const user = await User.findById(receiver);
-
-console.log("User Found:", user);
     if (!user) {
       return res.status(404).json({
         message: "Receiver not found",
       });
     }
+
+    // rest of your code...
 
     // Create message
     const newMessage = await Message.create({
