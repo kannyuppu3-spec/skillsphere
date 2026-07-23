@@ -18,7 +18,9 @@ const portfolioRoutes = require("./routes/portfolioRoutes");
 dotenv.config();
 
 connectDB();
-
+mongoose.connection.once("open", () => {
+  console.log("Database:", mongoose.connection.name);
+});
 const app = express();
 
 app.use(cors({
