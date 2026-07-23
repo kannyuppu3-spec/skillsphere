@@ -4,14 +4,16 @@ const User = require("../models/User");
 // Send Message
 const sendMessage = async (req, res) => {
   try {
+    console.log("Logged in user:", req.user.id);
+    console.log("Body:", req.body);
+
     const { receiver, message } = req.body;
 
-    console.log("Receiver from request:", receiver);
-    console.log("Type:", typeof receiver);
+    console.log("Receiver:", receiver);
 
     const user = await User.findById(receiver);
 
-    console.log("Found user:", user);
+    console.log("User Found:", user);
 
     if (!user) {
       return res.status(404).json({
@@ -19,9 +21,6 @@ const sendMessage = async (req, res) => {
       });
     }
 
-    // rest of your code...
-
-    // Create message
     const newMessage = await Message.create({
       sender: req.user.id,
       receiver,
@@ -33,9 +32,10 @@ const sendMessage = async (req, res) => {
       newMessage,
     });
 
-  } catch (error) {
+  } catch (err) {
+    console.log(err);
     res.status(500).json({
-      message: error.message,
+      message: err.message,
     });
   }
 };
