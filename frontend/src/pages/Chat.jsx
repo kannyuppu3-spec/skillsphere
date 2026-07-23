@@ -9,7 +9,7 @@ function Chat() {
 
   // Replace this with your CLIENT MongoDB _id
   const client = {
-  id: "6a61aa85c260a58634ee7638",
+  id: "6a61e399e7ccd0603085fbeb",
   name: "hello",
 };
 
