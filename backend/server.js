@@ -21,6 +21,12 @@ dotenv.config();
 connectDB();
 mongoose.connection.once("open", () => {
   console.log("Database:", mongoose.connection.name);
+  
+console.log("Host:", mongoose.connection.host);
+
+const users = await mongoose.connection.db.collection("users").find().toArray();
+
+console.log("Users in DB:", users);
 });
 const app = express();
 

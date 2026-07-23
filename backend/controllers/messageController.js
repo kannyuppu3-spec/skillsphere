@@ -5,9 +5,15 @@ const User = require("../models/User");
 const sendMessage = async (req, res) => {
   try {
     const { receiver, message } = req.body;
+
 console.log("Receiver ID:", receiver);
-    // Check if receiver exists
-    const user = await User.findById(receiver);
+
+const users = await User.find();
+
+console.log("All Users:", users);
+
+const user = await User.findById(receiver);
+
 console.log("User Found:", user);
     if (!user) {
       return res.status(404).json({
