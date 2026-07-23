@@ -11,13 +11,16 @@ function ClientDashboard() {
   }, []);
 
   const fetchJobs = async () => {
-    try {
-      const res = await api.get("/jobs/my");
-      setJobs(res.data.jobs);
-    } catch (err) {
-      console.log(err.response?.data || err.message);
-    }
-  };
+  try {
+    const res = await api.get("/jobs/my");
+
+    console.log("API Response:", res.data);
+
+    setJobs(res.data.jobs);
+  } catch (err) {
+    console.log(err.response?.data || err.message);
+  }
+};
 
   const deleteJob = async (id) => {
     const confirmDelete = window.confirm(
