@@ -171,22 +171,25 @@ const deleteJob = async (req, res) => {
 // Get Logged-in Client Jobs
 const getMyJobs = async (req, res) => {
   try {
-    console.log("Logged-in User:", req.user.id);
+
+    console.log("Logged User:", req.user.id);
+
+    const allJobs = await Job.find();
+
+    console.log("All Jobs:", allJobs);
 
     const jobs = await Job.find({
       user: req.user.id,
     });
 
-    console.log("Jobs:", jobs);
+    console.log("Matched Jobs:", jobs);
 
     res.json({
-      count: jobs.length,
       jobs,
     });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 module.exports = {
